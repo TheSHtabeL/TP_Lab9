@@ -1,5 +1,5 @@
 /*----------------------------*/
-/*-- Лабораторная работа №8 --*/
+/*-- Лабораторная работа №9 --*/
 /*----------------------------*/
 #include <tchar.h>
 #include <iostream>
@@ -29,7 +29,7 @@ int main()
 		wchar_t* integerTest = new wchar_t[100];
 		while (true) {
 			system("cls");
-			cout << "Лабораторная работа №8" << endl << endl;
+			cout << "Лабораторная работа №9" << endl << endl;
 			cout << "Очередь:" << endl
 				<< "1. Вывод всей очереди на экран" << endl
 				<< "2. Добавить элемент в очередь" << endl
@@ -114,8 +114,10 @@ int main()
 			break;
 		case 3: //Pop
 			if (structure->getFirst()) {
-				structure->pop();
-				cout << endl << "Элемент был удалён из очереди";
+				element = structure->pop();
+				cout << endl << "Элемент был удалён из очереди" << endl;
+				element->output();
+				delete element;
 			}
 			else {
 				cout << endl << "Очередь пуста, невозможно удалить элемент";
@@ -156,9 +158,9 @@ void outputDeque(Structure* structure) {
 		delete temp;
 	}
 	else {
-		for (int i = 1; temp->element != NULL; i++) {
+		for (int i = 1; temp->getElement() != NULL; i++) {
 			cout << endl << "Элемент очереди №" << i << ":" << endl;
-			temp->element->output();
+			temp->getElement()->output();
 			if (temp->getNext()) {
 				temp = temp->getNext();
 			}

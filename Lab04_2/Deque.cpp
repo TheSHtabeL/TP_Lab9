@@ -17,9 +17,8 @@ Structure::StructureElement::StructureElement() {
 	next = NULL;
 }
 Structure::StructureElement::~StructureElement() {
-	//this->element = NULL;
-	//this->next = NULL;
-	delete element;
+	//delete element;
+	element = NULL;
 	delete next;
 }
 Structure::Structure() {
@@ -27,7 +26,7 @@ Structure::Structure() {
 }
 Structure::~Structure() {
 	while (head != NULL) {
-		if (head->element != NULL) {
+		if (head->getElement() != NULL) {
 			pop();
 		}
 	}
@@ -38,8 +37,8 @@ void Structure::push(Interface* source) {
 	if (head != NULL) {
 		//В очереди уже есть вершина
 		StructureElement* temp = new StructureElement();
-		temp->element = source;
-		temp->next = head;
+		temp->setElement(source);
+		temp->setNext(head);
 		head = temp;
 		temp = NULL;
 		delete temp;
@@ -47,24 +46,23 @@ void Structure::push(Interface* source) {
 	else {
 		//В очереди нет вершины
 		head = new StructureElement();
-		head->element = source;
-		head->next = NULL;
+		head->setElement(source);
+		head->setNext(NULL);
 	}
 }
-void Structure::pop() {
+Interface* Structure::pop() {
 	//Метод выбрасывает из очереди элемент по правилу FIFO
-	/*StructureElement* temp = new StructureElement();
-	temp = this->getFirst();*/
 	StructureElement* temp = this->getFirst();
+	Interface* poppedElement;
 	if (temp == NULL) {
 		//Первый элемент пуст
 		//temp = NULL;
 		delete temp;
-		return;
+		return NULL;
 	}
 	else if (temp->getNext() == NULL) {
 		//В очереди остался один элемент
-		//head = NULL;
+		poppedElement = head->getElement();
 		delete head;
 		head = NULL;
 		//delete temp;
@@ -74,11 +72,25 @@ void Structure::pop() {
 		while (temp->getNext()->getNext() !=NULL) {
 			temp = temp->getNext();
 		}
+		poppedElement = temp->getNext()->getElement();
 		delete temp->getNext();
-		temp->next = NULL;
+		temp->setNext(NULL);
 	}
 	temp = NULL;
 	delete temp;
+	return poppedElement;
+}
+
+void Structure::StructureElement::setElement(Interface* source) {
+	element = source;
+}
+
+void Structure::StructureElement::setNext(Structure::StructureElement* source) {
+	next = source;
+}
+
+Interface* Structure::StructureElement::getElement() {
+	return this->element;
 }
 Structure::StructureElement* Structure::getFirst() {
 	//Получить указатель на текущее начало очереди
@@ -110,10 +122,10 @@ void Structure::recursion(StructureElement* temp) {
 	//Функция реверсивного ввода в файл. Так как мы используем очередь,
 	//нам необходимо записывать её в файл в обратном порядке, чтобы
 	//при считывании получить исходную версию структуры
-	if ((temp->element != NULL) && temp->getNext() ) {
+	if ((temp->getElement() != NULL) && temp->getNext() ) {
 		recursion(temp->getNext());
 	}
-	temp->element->serialize();
+	temp->getElement()->serialize();
 }
 void Structure::deserialize() {
 	//Десериализация структуры из файла
@@ -130,28 +142,24 @@ void Structure::deserialize() {
 				element->deserialize(read);
 				push(element);
 				element = NULL;
-				//delete element;
 			}
 			else if (!wcscmp(command, L"#ButtonPhone")) {
 				ButtonPhone* element = new ButtonPhone();
 				element->deserialize(read);
 				push(element);
 				element = NULL;
-				//delete element;
 			}
 			else if (!wcscmp(command, L"#AndroidPhone")) {
 				AndroidPhone* element = new AndroidPhone();
 				element->deserialize(read);
 				push(element);
 				element = NULL;
-				//delete element;
 			}
 			else if (!wcscmp(command, L"#SensorPhone")) {
 				SensorPhone* element = new SensorPhone();
 				element->deserialize(read);
 				push(element);
 				element = NULL;
-				//delete element;
 			}
 			else if (!wcscmp(command,L"#end")) {
 				delete command;

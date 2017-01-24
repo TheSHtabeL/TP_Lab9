@@ -13,15 +13,19 @@ public:
 	public:
 		StructureElement();
 		~StructureElement();
+		StructureElement* getNext();
+		Interface* getElement();
+		void setNext(StructureElement*);
+		void setElement(Interface*);
+	private:
 		Interface* element;
 		StructureElement* next;
-		StructureElement* getNext();
 	};
 public:
 	void serialize();
 	void deserialize();
 	void push(Interface*);
-	void pop();
+	Interface* pop();
 	StructureElement* getFirst();
 private:
 	void recursion(StructureElement*);
