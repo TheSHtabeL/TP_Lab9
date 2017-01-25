@@ -126,14 +126,16 @@ int main()
 			break;
 		case 4:
 			cout << endl << "Сериализация структуры" << endl;
-			structure->serialize();
+			//structure->serialize();
+			cout << endl << "В данной лабораторной работе функция отключена" << endl;
 			wait();
 			break;
 		case 5:
 			cout << endl << "Десериализация структуры" << endl;
-			delete structure; //Перезаписывание старой структуры
-			structure = new Structure();
-			structure->deserialize();
+			//delete structure; //Перезаписывание старой структуры
+			//structure = new Structure();
+			//structure->deserialize();
+			cout << endl << "В данной лабораторной работе функция отключена" << endl;
 			wait();
 			break;
 		case 6: //Quit
