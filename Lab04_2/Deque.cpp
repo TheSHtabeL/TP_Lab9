@@ -12,19 +12,26 @@
 using namespace std;
 
 //Структура данных "Очередь"
-Structure::StructureElement::StructureElement() {
+template <typename TYPE>
+Structure<TYPE>::StructureElement::StructureElement() {
 	element = NULL;
 	next = NULL;
 }
-Structure::StructureElement::~StructureElement() {
+
+template<typename TYPE>
+Structure<TYPE>::StructureElement::~StructureElement() {
 	//delete element;
 	element = NULL;
 	delete next;
 }
-Structure::Structure() {
+
+template <typename TYPE>
+Structure<TYPE>::Structure() {
 
 }
-Structure::~Structure() {
+
+template<typename TYPE>
+Structure<TYPE>::~Structure() {
 	while (head != NULL) {
 		if (head->getElement() != NULL) {
 			pop();
@@ -32,7 +39,9 @@ Structure::~Structure() {
 	}
 	delete head;
 }
-void Structure::push(Interface* source) {
+
+template<typename TYPE>
+void Structure<TYPE>::push(TYPE* source) {
 	//Помещение нового элемента в очередь
 	if (head != NULL) {
 		//В очереди уже есть вершина
@@ -50,10 +59,12 @@ void Structure::push(Interface* source) {
 		head->setNext(NULL);
 	}
 }
-Interface* Structure::pop() {
+
+template <typename TYPE>
+TYPE* Structure<TYPE>::pop() {
 	//Метод выбрасывает из очереди элемент по правилу FIFO
 	StructureElement* temp = this->getFirst();
-	Interface* poppedElement;
+	TYPE* poppedElement;
 	if (temp == NULL) {
 		//Первый элемент пуст
 		//temp = NULL;
@@ -81,92 +92,100 @@ Interface* Structure::pop() {
 	return poppedElement;
 }
 
-void Structure::StructureElement::setElement(Interface* source) {
+template <typename TYPE>
+void Structure<TYPE>::StructureElement::setElement(TYPE* source) {
 	element = source;
 }
 
-void Structure::StructureElement::setNext(Structure::StructureElement* source) {
+template <typename TYPE>
+void Structure<TYPE>::StructureElement::setNext(typename Structure<TYPE>::StructureElement* source) {
 	next = source;
 }
 
-Interface* Structure::StructureElement::getElement() {
+template <typename TYPE>
+TYPE* Structure<TYPE>::StructureElement::getElement() {
 	return this->element;
 }
-Structure::StructureElement* Structure::getFirst() {
+
+template <typename TYPE>
+typename Structure<TYPE>::StructureElement* Structure<TYPE>::getFirst() {
 	//Получить указатель на текущее начало очереди
 	return head;
 }
-Structure::StructureElement* Structure::StructureElement::getNext() {
+
+template <typename TYPE>
+typename Structure<TYPE>::StructureElement* Structure<TYPE>::StructureElement::getNext() {
 	//Обращение к следующему элементу
 	return this->next;
 }
-void Structure::serialize() {
-	//Сериализация существующей структуры
-	ofstream file("Saved Structure.txt");
-	Structure::StructureElement* temp = this->getFirst();
-	file.close();
-	if (temp == NULL) {
-		cout << endl << "Очередь пуста. Нет элементов для сериализации";
-		//delete temp;
-	}
-	else {
-		recursion(temp);
-	}
-	file.open("Saved Structure.txt", ios_base::app);
-	file << "#end";
-	file.close();
-	temp = NULL;
-	//delete temp;
-}
-void Structure::recursion(StructureElement* temp) {
-	//Функция реверсивного ввода в файл. Так как мы используем очередь,
-	//нам необходимо записывать её в файл в обратном порядке, чтобы
-	//при считывании получить исходную версию структуры
-	if ((temp->getElement() != NULL) && temp->getNext() ) {
-		recursion(temp->getNext());
-	}
-	temp->getElement()->serialize();
-}
-void Structure::deserialize() {
-	//Десериализация структуры из файла
-		wifstream* read = new wifstream("Saved Structure.txt");
-		if (!read->is_open()) {
-			cout << endl << "Ошибка при открытии файла." << endl;
-			return;
-		}
-		wchar_t* command = new wchar_t[100];
-		while (!read->eof()) {
-			read->getline(command, 100);
-			if (!wcscmp(command,L"#Phone")) {
-				Phone* element = new Phone();
-				element->deserialize(read);
-				push(element);
-				element = NULL;
-			}
-			else if (!wcscmp(command, L"#ButtonPhone")) {
-				ButtonPhone* element = new ButtonPhone();
-				element->deserialize(read);
-				push(element);
-				element = NULL;
-			}
-			else if (!wcscmp(command, L"#AndroidPhone")) {
-				AndroidPhone* element = new AndroidPhone();
-				element->deserialize(read);
-				push(element);
-				element = NULL;
-			}
-			else if (!wcscmp(command, L"#SensorPhone")) {
-				SensorPhone* element = new SensorPhone();
-				element->deserialize(read);
-				push(element);
-				element = NULL;
-			}
-			else if (!wcscmp(command,L"#end")) {
-				delete command;
-				delete read;
-				return;
-			}
-		}
-		delete command;
-		delete read;
-}
+
+//void Structure::serialize() {
+//	//Сериализация существующей структуры
+//	ofstream file("Saved Structure.txt");
+//	Structure::StructureElement* temp = this->getFirst();
+//	file.close();
+//	if (temp == NULL) {
+//		cout << endl << "Очередь пуста. Нет элементов для сериализации";
+//		//delete temp;
+//	}
+//	else {
+//		recursion(temp);
+//	}
+//	file.open("Saved Structure.txt", ios_base::app);
+//	file << "#end";
+//	file.close();
+//	temp = NULL;
+//	//delete temp;
+//}
+//void Structure::recursion(StructureElement* temp) {
+//	//Функция реверсивного ввода в файл. Так как мы используем очередь,
+//	//нам необходимо записывать её в файл в обратном порядке, чтобы
+//	//при считывании получить исходную версию структуры
+//	if ((temp->getElement() != NULL) && temp->getNext() ) {
+//		recursion(temp->getNext());
+//	}
+//	temp->getElement()->serialize();
+//}
+//void Structure::deserialize() {
+//	//Десериализация структуры из файла
+//		wifstream* read = new wifstream("Saved Structure.txt");
+//		if (!read->is_open()) {
+//			cout << endl << "Ошибка при открытии файла." << endl;
+//			return;
+//		}
+//		wchar_t* command = new wchar_t[100];
+//		while (!read->eof()) {
+//			read->getline(command, 100);
+//			if (!wcscmp(command,L"#Phone")) {
+//				Phone* element = new Phone();
+//				element->deserialize(read);
+//				push(element);
+//				element = NULL;
+//			}
+//			else if (!wcscmp(command, L"#ButtonPhone")) {
+//				ButtonPhone* element = new ButtonPhone();
+//				element->deserialize(read);
+//				push(element);
+//				element = NULL;
+//			}
+//			else if (!wcscmp(command, L"#AndroidPhone")) {
+//				AndroidPhone* element = new AndroidPhone();
+//				element->deserialize(read);
+//				push(element);
+//				element = NULL;
+//			}
+//			else if (!wcscmp(command, L"#SensorPhone")) {
+//				SensorPhone* element = new SensorPhone();
+//				element->deserialize(read);
+//				push(element);
+//				element = NULL;
+//			}
+//			else if (!wcscmp(command,L"#end")) {
+//				delete command;
+//				delete read;
+//				return;
+//			}
+//		}
+//		delete command;
+//		delete read;
+//}

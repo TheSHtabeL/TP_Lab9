@@ -4,6 +4,7 @@
 #include "Phone.h"
 
 //Класс "Структура" реализует очередь с правилами работы FIFO
+template <typename TYPE>
 class Structure {
 public:
 	Structure();
@@ -14,21 +15,21 @@ public:
 		StructureElement();
 		~StructureElement();
 		StructureElement* getNext();
-		Interface* getElement();
-		void setNext(StructureElement*);
-		void setElement(Interface*);
+		TYPE* getElement();
+		void setNext(typename StructureElement*);
+		void setElement(TYPE*);
 	private:
-		Interface* element;
+		TYPE* element;
 		StructureElement* next;
 	};
 public:
-	void serialize();
-	void deserialize();
-	void push(Interface*);
-	Interface* pop();
+	//void serialize();
+	//void deserialize();
+	void push(TYPE*);
+	TYPE* pop();
 	StructureElement* getFirst();
 private:
-	void recursion(StructureElement*);
+	//void recursion(StructureElement*);
 	StructureElement* head;
 };
 

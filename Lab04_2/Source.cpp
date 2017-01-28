@@ -9,20 +9,23 @@
 #include <cctype>
 #include <wchar.h>
 #include "Phone.h"
+//#include "Phone.cpp"
 #include "Deque.h"
+#include "Deque.cpp"
 
 using namespace std;
 
 void wait();
-void outputDeque(Structure* structure);
+void outputDeque(Structure<Interface>* structure);
 
 int main()
 {
 	locale::global(std::locale("Russian"));
 	setlocale(LC_ALL, "Russian");
 	std::wcin.imbue(std::locale("rus_rus.866"));
-	Structure* structure = new Structure();
+	Structure<typename Interface>* structure = new Structure<typename Interface>();
 	Interface* element;
+	//Structure<Interface> structure;
 	int command;
 
 	while (true) {
@@ -149,12 +152,14 @@ int main()
 		delete integerTest;
 	}
 }
+
 void wait() {
 	cout << endl << "Нажмите любую клавишу для продолжения..." << endl;
 	_getch();
 }
-void outputDeque(Structure* structure) {
-	Structure::StructureElement* temp = structure->getFirst();
+
+void outputDeque(Structure<Interface>* structure) {
+	Structure<Interface>::StructureElement* temp = structure->getFirst();
 	if (temp == NULL) {
 		cout << endl << "Очередь пуста";
 		delete temp;
