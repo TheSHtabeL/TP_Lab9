@@ -12,6 +12,9 @@
 using namespace std;
 
 template Structure<int>;
+template Structure<short>;
+template Structure<char>;
+template Structure<void*>;
 
 //Структура данных "Очередь"
 template <typename TYPE>

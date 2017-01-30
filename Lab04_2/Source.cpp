@@ -29,16 +29,23 @@ int main()
 	bool dequeType = true; //true: Object; false: standard
 	int command;
 	int value;
+	bool test = false; //Флаг, включающий возможность быстрой отладки работы с другими типами
+	Structure<int>* testStructure = new Structure<int>();
+	int* testElement;
 
 	while (true) {
 		wchar_t* integerTest = new wchar_t[100];
 		while (true) {
 			system("cls");
 			cout << "Лабораторная работа №9" << endl << endl;
+
 			if (dequeType) {
 				cout << "В данный момент выбрана очередь типа Interface" << endl;
 			}
-			else {
+			else if (test) {
+				cout << "Тестовый режим" << endl;
+			}
+			else{
 				cout << "В данный момент выбрана очередь стандартного типа" << endl;
 			}
 			cout << "Команды:" << endl
@@ -70,8 +77,11 @@ int main()
 			if (dequeType) {
 				outputDeque(interfaceStructure); //Output case
 			}
-			else {
+			else if(!test){
 				outputDeque(intStructure);
+			}
+			else {
+				outputDeque(testStructure);
 			}
 			wait();
 			break;
@@ -133,7 +143,7 @@ int main()
 					break;
 				}
 			}
-			else {
+			else if (!test) {
 				while (true) {
 					system("cls");
 					cout << "Введите значение нового элемента структуры типа int: ";
@@ -152,6 +162,12 @@ int main()
 				intStructure->push(intElement);
 				intElement = NULL;
 			}
+			else {
+				//Изменяемая часть для быстрой подстановки структур другого типа
+				testElement = new int(1);
+				testStructure->push(testElement);
+				testElement = NULL;
+			}
 			break;
 		case 3: //Pop
 			if (dequeType) {
@@ -166,12 +182,24 @@ int main()
 				}
 				wait();
 			}
-			else {
+			else if(!test){
 				if (intStructure->getFirst()) {
 					intElement = intStructure->pop();
 					cout << endl << "Элемент был удалён из очереди" << endl;
 					cout << intElement;
 					delete intElement;
+				}
+				else {
+					cout << endl << "Очередь пуста, невозможно удалить элемент";
+				}
+				wait();
+			}
+			else {
+				if (testStructure->getFirst()) {
+					testElement = testStructure->pop();
+					cout << *testElement;
+					delete testElement;
+					cout << endl << "Элемент был удалён из очереди" << endl;
 				}
 				else {
 					cout << endl << "Очередь пуста, невозможно удалить элемент";
