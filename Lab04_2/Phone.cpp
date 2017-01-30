@@ -86,6 +86,9 @@ bool Phone::checkFirm(wchar_t firm[]) {
 	//Метод сообщает, был ли выпущен телефон указанным производителем
 	return wcscmp(firm, this->firm) == 0 ? true : false;
 }
+int Phone::getPrice() {
+	return price;
+}
 void Phone::input() {
 	//Метод для ручного ввода значений для переменных класса
 	wchar_t* integerTest = new wchar_t[100];

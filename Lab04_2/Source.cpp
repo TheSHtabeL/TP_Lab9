@@ -10,12 +10,15 @@
 #include <wchar.h>
 #include "Phone.h"
 #include "Deque.h"
+#include "Compare.h"
 
 using namespace std;
 
 void wait();
 template <typename TYPE>
 void outputDeque(Structure<TYPE>* structure);
+void compare();
+void cleanInputBuffer();
 
 int main()
 {
@@ -55,7 +58,8 @@ int main()
 				<< "3. Удалить элемент из очереди" << endl
 				<< "4. Сериализация структуры" << endl
 				<< "5. Десериализация структуры" << endl
-				<< "6. Выйти" << endl << endl
+				<< "6. Тест параметризованной функции по сравнению объектов" << endl
+				<< "7. Выйти" << endl << endl
 				<< "Введите команду: ";
 			wcin.getline(integerTest, _msize(integerTest) / sizeof(wchar_t));
 			if (iswdigit(integerTest[0])) { //Проверяем, начинается ли строка с корректного числа
@@ -221,9 +225,13 @@ int main()
 			cout << endl << "В данной лабораторной работе функция отключена" << endl;
 			wait();
 			break;
-		case 6: //Quit
+		case 6: //Тест на сравнение
+			compare();
+			break;
+		case 7: //Quit
 			delete interfaceStructure;
 			delete intStructure;
+			delete testStructure;
 			delete integerTest;
 			return 0;
 		default:
@@ -260,4 +268,50 @@ void outputDeque(Structure<TYPE>* structure) {
 		}
 	}
 	temp = NULL;
+}
+
+void compare() {
+	//Функция для теста по сравнению объектов по заданию в лабораторной работе
+	Phone* firstObj = new Phone();
+	Phone* secondObj = new Phone();
+	bool result = false; //Результат теста
+
+	system("cls");
+	cout << "Сравнение двух объектов типа Phone" << endl;
+	cout << endl << "Создание первого объекта: " << endl;
+	cleanInputBuffer();
+	firstObj->input();
+	cout << endl << "Создание второго объекта: " << endl;
+	cleanInputBuffer();
+	secondObj->input();
+	wait();
+	system("cls");
+	cout << endl << "Тест:" << endl << endl
+		<< "Параметр price первого объекта: " << firstObj->getPrice() << endl
+		<< "Параметр price первого объекта: " << secondObj->getPrice() << endl << endl
+		<< "Вызов функции 'isBigger(...)':" << endl;
+	result = isBigger<Phone>(firstObj, secondObj);
+	if (result) {
+		cout << "Первый объект имеет больший параметр price, чем второй" << endl;
+	}
+	else {
+		cout << "Первый объект имеет меньший параметр price, чем второй" << endl;
+	}
+
+	cout << "Вызов функции 'isSmallOrEqual(...)':" << endl;
+	result = isSmallerOrEqual(firstObj, secondObj);
+	if (result) {
+		cout << "Первый объект имеет меньший или равный параметр price, чем второй" << endl;
+	}
+	else {
+		cout << "Первый объект имеет больший параметр price, чем второй" << endl;
+	}
+	wait();
+}
+
+void cleanInputBuffer() {
+	while (wcin.peek() != '\n') {
+		wcin.ignore();
+	}
+	wcin.ignore();
 }

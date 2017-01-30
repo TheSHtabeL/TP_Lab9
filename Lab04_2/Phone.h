@@ -1,6 +1,8 @@
 #ifndef PHONE_H
 #define PHONE_H
 
+#include "iostream"
+
 class Interface {
 public:
 	Interface();
@@ -33,9 +35,9 @@ public:
 	void deserialize(std::wifstream*);
 	void setFirm(wchar_t[]);
 	wchar_t* getFirm();
+	int getPrice();
 protected:
 	int screenSize[2];
-
 	double getDiagonal();
 private:
 	wchar_t* firm;

@@ -113,10 +113,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Compare.h" />
     <ClInclude Include="Deque.h" />
     <ClInclude Include="Phone.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Compare.cpp" />
     <ClCompile Include="Deque.cpp" />
     <ClCompile Include="Phone.cpp" />
     <ClCompile Include="Source.cpp" />
