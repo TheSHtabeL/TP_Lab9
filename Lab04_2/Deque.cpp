@@ -11,6 +11,8 @@
 
 using namespace std;
 
+template Structure<int>;
+
 //Структура данных "Очередь"
 template <typename TYPE>
 Structure<TYPE>::StructureElement::StructureElement() {
@@ -80,7 +82,7 @@ TYPE* Structure<TYPE>::pop() {
 	}
 	else {
 		//Удаление элемента под номером n, где n>1
-		while (temp->getNext()->getNext() !=NULL) {
+		while (temp->getNext()->getNext() != NULL) {
 			temp = temp->getNext();
 		}
 		poppedElement = temp->getNext()->getElement();
@@ -117,6 +119,114 @@ template <typename TYPE>
 typename Structure<TYPE>::StructureElement* Structure<TYPE>::StructureElement::getNext() {
 	//Обращение к следующему элементу
 	return this->next;
+}
+
+template <typename TYPE>
+void Structure<TYPE>::StructureElement::output() {
+	cout << *element;
+}
+
+//*-- Специализация для типа Interface --*//
+
+Structure<Interface>::StructureElement::StructureElement() {
+	element = NULL;
+	next = NULL;
+}
+
+Structure<Interface>::StructureElement::~StructureElement() {
+	//delete element;
+	element = NULL;
+	delete next;
+}
+
+Structure<Interface>::Structure() {
+
+}
+
+
+Structure<Interface>::~Structure() {
+	while (head != NULL) {
+		if (head->getElement() != NULL) {
+			pop();
+		}
+	}
+	delete head;
+}
+
+void Structure<Interface>::push(Interface* source) {
+	//Помещение нового элемента в очередь
+	if (head != NULL) {
+		//В очереди уже есть вершина
+		StructureElement* temp = new StructureElement();
+		temp->setElement(source);
+		temp->setNext(head);
+		head = temp;
+		temp = NULL;
+		delete temp;
+	}
+	else {
+		//В очереди нет вершины
+		head = new StructureElement();
+		head->setElement(source);
+		head->setNext(NULL);
+	}
+}
+
+Interface* Structure<Interface>::pop() {
+	//Метод выбрасывает из очереди элемент по правилу FIFO
+	StructureElement* temp = this->getFirst();
+	Interface* poppedElement;
+	if (temp == NULL) {
+		//Первый элемент пуст
+		//temp = NULL;
+		delete temp;
+		return NULL;
+	}
+	else if (temp->getNext() == NULL) {
+		//В очереди остался один элемент
+		poppedElement = head->getElement();
+		delete head;
+		head = NULL;
+		//delete temp;
+	}
+	else {
+		//Удаление элемента под номером n, где n>1
+		while (temp->getNext()->getNext() != NULL) {
+			temp = temp->getNext();
+		}
+		poppedElement = temp->getNext()->getElement();
+		delete temp->getNext();
+		temp->setNext(NULL);
+	}
+	temp = NULL;
+	delete temp;
+	return poppedElement;
+}
+
+void Structure<Interface>::StructureElement::setElement(Interface* source) {
+	element = source;
+}
+
+void Structure<Interface>::StructureElement::setNext(typename Structure<Interface>::StructureElement* source) {
+	next = source;
+}
+
+Interface* Structure<Interface>::StructureElement::getElement() {
+	return this->element;
+}
+
+Structure<Interface>::StructureElement* Structure<Interface>::getFirst() {
+	//Получить указатель на текущее начало очереди
+	return head;
+}
+
+Structure<Interface>::StructureElement* Structure<Interface>::StructureElement::getNext() {
+	//Обращение к следующему элементу
+	return this->next;
+}
+
+void Structure<Interface>::StructureElement::output() {
+	this->element->output();
 }
 
 //void Structure::serialize() {

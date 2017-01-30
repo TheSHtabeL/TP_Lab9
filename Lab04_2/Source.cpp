@@ -9,31 +9,40 @@
 #include <cctype>
 #include <wchar.h>
 #include "Phone.h"
-//#include "Phone.cpp"
 #include "Deque.h"
-#include "Deque.cpp"
 
 using namespace std;
 
 void wait();
-void outputDeque(Structure<Interface>* structure);
+template <typename TYPE>
+void outputDeque(Structure<TYPE>* structure);
 
 int main()
 {
 	locale::global(std::locale("Russian"));
 	setlocale(LC_ALL, "Russian");
 	std::wcin.imbue(std::locale("rus_rus.866"));
-	Structure<typename Interface>* structure = new Structure<typename Interface>();
-	Interface* element;
-	//Structure<Interface> structure;
+	Structure<typename Interface>* interfaceStructure = new Structure<typename Interface>();
+	Structure<int>* intStructure = new Structure<int>();
+	Interface* interfaceElement;
+	int* intElement;
+	bool dequeType = true; //true: Object; false: standard
 	int command;
+	int value;
 
 	while (true) {
 		wchar_t* integerTest = new wchar_t[100];
 		while (true) {
 			system("cls");
 			cout << "Лабораторная работа №9" << endl << endl;
-			cout << "Очередь:" << endl
+			if (dequeType) {
+				cout << "В данный момент выбрана очередь типа Interface" << endl;
+			}
+			else {
+				cout << "В данный момент выбрана очередь стандартного типа" << endl;
+			}
+			cout << "Команды:" << endl
+				<< "0. Сменить очередь" << endl
 				<< "1. Вывод всей очереди на экран" << endl
 				<< "2. Добавить элемент в очередь" << endl
 				<< "3. Удалить элемент из очереди" << endl
@@ -54,11 +63,20 @@ int main()
 		delete integerTest;
 		integerTest = new wchar_t[100];
 		switch (command) {
+		case 0:
+			dequeType = !dequeType;
+			break;
 		case 1:
-			outputDeque(structure); //Output case
+			if (dequeType) {
+				outputDeque(interfaceStructure); //Output case
+			}
+			else {
+				outputDeque(intStructure);
+			}
 			wait();
 			break;
 		case 2: //Push
+			if (dequeType) {
 				while (true) {
 					system("cls");
 					cout << "Выберите тип элемента, который вы добавите в очередь:" << endl
@@ -87,45 +105,79 @@ int main()
 				switch (command) {
 				case 1:
 					cout << endl << "Объект Phone: " << endl;
-					element = new Phone();
-					element->input();
-					structure->push(element);
-					element = NULL;
+					interfaceElement = new Phone();
+					interfaceElement->input();
+					interfaceStructure->push(interfaceElement);
+					interfaceElement = NULL;
 					break;
 				case 2:
 					cout << endl << "Объект ButtonPhone: " << endl;
-					element = new ButtonPhone();
-					element->input();
-					structure->push(element);
-					element = NULL;
+					interfaceElement = new ButtonPhone();
+					interfaceElement->input();
+					interfaceStructure->push(interfaceElement);
+					interfaceElement = NULL;
 					break;
 				case 3:
 					cout << endl << "Объект SensorPhone: " << endl;
-					element = new SensorPhone();
-					element->input();
-					structure->push(element);
-					element = NULL;
+					interfaceElement = new SensorPhone();
+					interfaceElement->input();
+					interfaceStructure->push(interfaceElement);
+					interfaceElement = NULL;
 					break;
 				case 4:
 					cout << endl << "Объект AndroidPhone: " << endl;
-					element = new AndroidPhone();
-					element->input();
-					structure->push(element);
-					element = NULL;
+					interfaceElement = new AndroidPhone();
+					interfaceElement->input();
+					interfaceStructure->push(interfaceElement);
+					interfaceElement = NULL;
 					break;
 				}
-			break;
-		case 3: //Pop
-			if (structure->getFirst()) {
-				element = structure->pop();
-				cout << endl << "Элемент был удалён из очереди" << endl;
-				element->output();
-				delete element;
 			}
 			else {
-				cout << endl << "Очередь пуста, невозможно удалить элемент";
+				while (true) {
+					system("cls");
+					cout << "Введите значение нового элемента структуры типа int: ";
+					wcin.getline(integerTest, _msize(integerTest) / sizeof(wchar_t));
+
+					if (iswdigit(integerTest[0])) { //Проверяем, начинается ли строка с корректного числа
+						value = _wtoi(integerTest); //Переводим число из строки в int
+						break;
+					}
+					else {
+						cout << endl << "Некорректное значение, попробуйте ещё раз." << endl;
+						wait();
+					}
+				}
+				intElement = new int(value);
+				intStructure->push(intElement);
+				intElement = NULL;
 			}
-			wait();
+			break;
+		case 3: //Pop
+			if (dequeType) {
+				if (interfaceStructure->getFirst()) {
+					interfaceElement = interfaceStructure->pop();
+					cout << endl << "Элемент был удалён из очереди" << endl;
+					interfaceElement->output();
+					delete interfaceElement;
+				}
+				else {
+					cout << endl << "Очередь пуста, невозможно удалить элемент";
+				}
+				wait();
+			}
+			else {
+				if (intStructure->getFirst()) {
+					intElement = intStructure->pop();
+					cout << endl << "Элемент был удалён из очереди" << endl;
+					cout << intElement;
+					delete intElement;
+				}
+				else {
+					cout << endl << "Очередь пуста, невозможно удалить элемент";
+				}
+				wait();
+			}
 			break;
 		case 4:
 			cout << endl << "Сериализация структуры" << endl;
@@ -142,14 +194,15 @@ int main()
 			wait();
 			break;
 		case 6: //Quit
-			delete structure;
+			delete interfaceStructure;
+			delete intStructure;
 			delete integerTest;
 			return 0;
 		default:
 			cout << "Неверная команда. Попробуйте ещё раз." << endl;
 			wait();
+			delete integerTest;
 		}
-		delete integerTest;
 	}
 }
 
@@ -158,8 +211,9 @@ void wait() {
 	_getch();
 }
 
-void outputDeque(Structure<Interface>* structure) {
-	Structure<Interface>::StructureElement* temp = structure->getFirst();
+template<typename TYPE>
+void outputDeque(Structure<TYPE>* structure) {
+	Structure<TYPE>::StructureElement* temp = structure->getFirst();
 	if (temp == NULL) {
 		cout << endl << "Очередь пуста";
 		delete temp;
@@ -167,7 +221,8 @@ void outputDeque(Structure<Interface>* structure) {
 	else {
 		for (int i = 1; temp->getElement() != NULL; i++) {
 			cout << endl << "Элемент очереди №" << i << ":" << endl;
-			temp->getElement()->output();
+			//temp->getElement()->output();
+			temp->output();
 			if (temp->getNext()) {
 				temp = temp->getNext();
 			}
