@@ -18,7 +18,6 @@ void wait();
 template <typename TYPE>
 void outputDeque(Structure<TYPE>* structure);
 void compare();
-void cleanInputBuffer();
 
 int main()
 {
@@ -257,7 +256,6 @@ void outputDeque(Structure<TYPE>* structure) {
 	else {
 		for (int i = 1; temp->getElement() != NULL; i++) {
 			cout << endl << "Элемент очереди №" << i << ":" << endl;
-			//temp->getElement()->output();
 			temp->output();
 			if (temp->getNext()) {
 				temp = temp->getNext();
@@ -279,10 +277,8 @@ void compare() {
 	system("cls");
 	cout << "Сравнение двух объектов типа Phone" << endl;
 	cout << endl << "Создание первого объекта: " << endl;
-	cleanInputBuffer();
 	firstObj->input();
 	cout << endl << "Создание второго объекта: " << endl;
-	cleanInputBuffer();
 	secondObj->input();
 	wait();
 	system("cls");
@@ -290,7 +286,7 @@ void compare() {
 		<< "Параметр price первого объекта: " << firstObj->getPrice() << endl
 		<< "Параметр price первого объекта: " << secondObj->getPrice() << endl << endl
 		<< "Вызов функции 'isBigger(...)':" << endl;
-	result = isBigger<Phone>(firstObj, secondObj);
+	result = isBigger(firstObj, secondObj);
 	if (result) {
 		cout << "Первый объект имеет больший параметр price, чем второй" << endl;
 	}
@@ -307,11 +303,6 @@ void compare() {
 		cout << "Первый объект имеет больший параметр price, чем второй" << endl;
 	}
 	wait();
-}
-
-void cleanInputBuffer() {
-	while (wcin.peek() != '\n') {
-		wcin.ignore();
-	}
-	wcin.ignore();
+	delete firstObj;
+	delete secondObj;
 }
