@@ -17,7 +17,7 @@ public:
 		StructureElement* getNext();
 		TYPE* getElement();
 		void setNext(typename StructureElement*);
-		void setElement(TYPE*);	
+		void setElement(TYPE*);
 		void output();
 	private:
 		TYPE* element;

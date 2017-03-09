@@ -161,7 +161,7 @@ void Structure<Interface>::push(Interface* source) {
 	if (head != NULL) {
 		//В очереди уже есть вершина
 		StructureElement* temp = new StructureElement();
-		temp->setElement(source);
+		temp->setElement(source); 
 		temp->setNext(head);
 		head = temp;
 		temp = NULL;
