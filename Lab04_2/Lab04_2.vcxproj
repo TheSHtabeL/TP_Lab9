@@ -116,6 +116,7 @@
     <ClInclude Include="Compare.h" />
     <ClInclude Include="Deque.h" />
     <ClInclude Include="Phone.h" />
+    <ClInclude Include="Types.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Compare.cpp" />

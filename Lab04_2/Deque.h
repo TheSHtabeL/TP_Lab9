@@ -23,44 +23,30 @@ public:
 		TYPE* element;
 		StructureElement* next;
 	};
-public:
-	//void serialize();
-	//void deserialize();
-	void push(TYPE*);
-	TYPE* pop();
-	StructureElement* getFirst();
-private:
-	//void recursion(StructureElement*);
-	StructureElement* head;
-};
-
-template <>
-class Structure<Interface> {
-public:
-	Structure();
-	~Structure();
-	// ласс "Ёлемент структуры" отвечает за отдельный элемент очереди
-	class StructureElement {
+	class Iterator {
 	public:
-		StructureElement();
-		~StructureElement();
-		StructureElement* getNext();
-		Interface* getElement();
-		void setNext(typename StructureElement*);
-		void setElement(Interface*);
-		void output();
+		Iterator();
+		Iterator(Iterator*);
+		Iterator(Iterator const&);
+		~Iterator();
+
+		bool operator==(Iterator const&);
+		Iterator& operator=(Iterator const&);
+		Iterator& operator++();
+		//Iterator* operator++();
+		void setIterator(StructureElement*);
 	private:
-		Interface* element;
-		StructureElement* next;
+		StructureElement* element;
 	};
 public:
-	//void serialize();
-	//void deserialize();
-	void push(Interface*);
-	Interface* pop();
+	void push(TYPE*);
+	void push(TYPE);
+	TYPE* pop();
+
+	Iterator* begin();
+	Iterator* end();
 	StructureElement* getFirst();
 private:
-	//void recursion(StructureElement*);
 	StructureElement* head;
 };
 
